@@ -49,6 +49,10 @@ import com.loiu92.taiwanmahjong.ui.i18n.Strings
 import com.loiu92.taiwanmahjong.ui.i18n.claimLabel
 import com.loiu92.taiwanmahjong.ui.theme.MahjongColors
 
+/**
+ * Cinematic first-person parlor table — large host across, hostess at side,
+ * felt + 發 emblem, player hand along the bottom (matches reference mood).
+ */
 @Composable
 fun TableScreen(
     state: GameState,
@@ -76,7 +80,7 @@ fun TableScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(R.drawable.bg_parlor),
+            painter = painterResource(R.drawable.bg_table),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
@@ -85,139 +89,181 @@ fun TableScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    Brush.radialGradient(
-                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.45f)),
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.25f),
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.55f),
+                        ),
                     ),
                 ),
         )
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            TableTopBar(state, strings, onToggleLang, onQuit)
-
-            Box(
+        // Minimal top chrome
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "${state.stake * 2}/${state.stake}",
+                color = MahjongColors.gold,
+                fontWeight = FontWeight.Bold,
+                fontSize = 13.sp,
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 6.dp),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .fillMaxWidth(0.82f)
-                        .fillMaxHeight(0.78f)
-                        .shadow(16.dp, RoundedCornerShape(20.dp))
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(
-                                    MahjongColors.feltEdge.copy(alpha = 0.92f),
-                                    MahjongColors.felt.copy(alpha = 0.95f),
-                                ),
-                            ),
-                        )
-                        .border(2.dp, MahjongColors.gold.copy(alpha = 0.35f), RoundedCornerShape(20.dp)),
-                ) {
-                    Text(
-                        text = strings.brandZh,
-                        modifier = Modifier.align(Alignment.Center),
-                        color = Color.White.copy(alpha = 0.07f),
-                        fontSize = 36.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-
-                    SeatPortrait(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(top = 6.dp),
-                        playerIndex = top,
-                        state = state,
-                        zh = zh,
-                        compact = false,
-                    )
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(top = 78.dp),
-                    ) {
-                        repeat(minOf(8, state.player(top).hand.size)) { TileBack() }
-                    }
-                    DiscardRow(
-                        tiles = state.player(top).discards,
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(top = 118.dp),
-                    )
-
-                    SeatPortrait(
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(start = 4.dp),
-                        playerIndex = left,
-                        state = state,
-                        zh = zh,
-                        compact = true,
-                    )
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(start = 72.dp),
-                    ) {
-                        repeat(minOf(6, state.player(left).hand.size / 2 + 1)) {
-                            TileBack(compact = true)
-                        }
-                    }
-
-                    SeatPortrait(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 4.dp),
-                        playerIndex = right,
-                        state = state,
-                        zh = zh,
-                        compact = true,
-                    )
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 72.dp),
-                    ) {
-                        repeat(minOf(6, state.player(right).hand.size / 2 + 1)) {
-                            TileBack(compact = true)
-                        }
-                    }
-
-                    Row(
-                        modifier = Modifier.align(Alignment.Center),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(18.dp),
-                    ) {
-                        WindCompass(state)
-                        TimerBadge(timer)
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 6.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        DiscardRow(human.discards)
-                        if (human.melds.isNotEmpty()) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                human.melds.forEach { meld ->
-                                    Row {
-                                        meld.tiles.forEach { tile ->
-                                            MahjongTile(tile, compact = true)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    .background(Color.Black.copy(alpha = 0.45f), RoundedCornerShape(12.dp))
+                    .padding(horizontal = 10.dp, vertical = 4.dp),
+            )
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = if (zh) "牌中見真章" else "GOOD TILES",
+                    color = MahjongColors.gold,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 12.sp,
+                )
+                Text(
+                    text = if (zh) "GOOD TILES / BETTER FRIENDS" else "BETTER FRIENDS",
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 9.sp,
+                )
+            }
+            Row {
+                TextButton(onClick = onToggleLang) {
+                    Text(strings.langToggle, color = MahjongColors.gold)
+                }
+                TextButton(onClick = onQuit) {
+                    Text(strings.exit, color = MahjongColors.mist)
                 }
             }
+        }
 
-            HandBar(
+        // Left hostess (MeiMei) — large, like reference
+        CinematicHost(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 4.dp, bottom = 40.dp)
+                .fillMaxHeight(0.62f)
+                .width(150.dp),
+            player = state.player(left),
+            active = state.currentPlayer == left,
+            zh = zh,
+            alignment = Alignment.BottomStart,
+        )
+
+        // Right hostess (smaller)
+        CinematicHost(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 4.dp, bottom = 60.dp)
+                .fillMaxHeight(0.48f)
+                .width(120.dp),
+            player = state.player(right),
+            active = state.currentPlayer == right,
+            zh = zh,
+            alignment = Alignment.BottomEnd,
+        )
+
+        // Opposite host (Hao) — hero across table
+        CinematicHost(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 36.dp)
+                .fillMaxHeight(0.42f)
+                .width(200.dp),
+            player = state.player(top),
+            active = state.currentPlayer == top,
+            zh = zh,
+            alignment = Alignment.BottomCenter,
+            showNameAbove = false,
+        )
+
+        // Felt table plane
+        Box(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = 28.dp)
+                .fillMaxWidth(0.58f)
+                .fillMaxHeight(0.42f)
+                .shadow(20.dp, RoundedCornerShape(14.dp))
+                .clip(RoundedCornerShape(14.dp))
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(Color(0xFF1B5E3A), Color(0xFF0A2E1C)),
+                    ),
+                )
+                .border(3.dp, Color(0xFF3E2723), RoundedCornerShape(14.dp)),
+        ) {
+            Image(
+                painter = painterResource(R.drawable.emblem_fa),
+                contentDescription = "發",
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(72.dp),
+                contentScale = ContentScale.Fit,
+            )
+
+            // Opponent wall (top of felt)
+            Row(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 8.dp),
+            ) {
+                repeat(minOf(12, state.player(top).hand.size)) { TileBack(compact = true) }
+            }
+            DiscardRow(
+                tiles = state.player(top).discards,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 46.dp),
+            )
+            DiscardRow(
+                tiles = state.player(left).discards.takeLast(6),
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 6.dp),
+            )
+            DiscardRow(
+                tiles = state.player(right).discards.takeLast(6),
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 6.dp),
+            )
+
+            // Timer + wall count
+            Row(
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "${state.wallRemaining}",
+                    color = MahjongColors.gold,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.45f), RoundedCornerShape(8.dp))
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                )
+                TimerBadge(timer)
+            }
+        }
+
+        // Bottom hand bar — first-person
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.85f)),
+                    ),
+                )
+                .padding(start = 8.dp, end = 8.dp, bottom = 6.dp, top = 12.dp),
+        ) {
+            ActionRow(
                 state = state,
                 human = human,
                 humanIndex = humanIndex,
@@ -232,119 +278,85 @@ fun TableScreen(
                 onKong = onKong,
                 onToggleAuto = onToggleAuto,
             )
-        }
-    }
-}
-
-@Composable
-private fun TableTopBar(
-    state: GameState,
-    strings: Strings,
-    onToggleLang: () -> Unit,
-    onQuit: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Black.copy(alpha = 0.55f))
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text = "${state.stake * 2}/${state.stake}",
-            color = MahjongColors.gold,
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp,
-        )
-        Text(
-            text = strings.brandZh,
-            color = MahjongColors.roseNeon,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 13.sp,
-        )
-        Row {
-            TextButton(onClick = onToggleLang) {
-                Text(text = strings.langToggle, color = MahjongColors.roseNeon)
-            }
-            TextButton(onClick = onQuit) {
-                Text(text = strings.exit, color = MahjongColors.mist)
-            }
-        }
-    }
-}
-
-@Composable
-private fun SeatPortrait(
-    modifier: Modifier,
-    playerIndex: Int,
-    state: GameState,
-    zh: Boolean,
-    compact: Boolean,
-) {
-    val p = state.player(playerIndex)
-    val active = state.currentPlayer == playerIndex
-    val avatar = ParlorCast.avatarRes(p.name)
-    val avatarSize = if (compact) 64.dp else 72.dp
-
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Box {
-            if (avatar != null) {
-                Image(
-                    painter = painterResource(avatar),
-                    contentDescription = p.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(avatarSize)
-                        .shadow(8.dp, CircleShape)
-                        .clip(CircleShape)
-                        .border(
-                            width = if (active) 3.dp else 2.dp,
-                            color = if (active) MahjongColors.gold else Color.White.copy(alpha = 0.5f),
-                            shape = CircleShape,
-                        ),
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .size(avatarSize)
-                        .clip(CircleShape)
-                        .background(MahjongColors.rosewood),
-                    contentAlignment = Alignment.Center,
+            if (human.melds.isNotEmpty()) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.padding(bottom = 4.dp),
                 ) {
-                    Text(
-                        text = p.name.take(1),
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
+                    human.melds.forEach { meld ->
+                        Row {
+                            meld.tiles.forEach { MahjongTile(it, compact = true) }
+                        }
+                    }
+                }
+            }
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                verticalAlignment = Alignment.Bottom,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                items(
+                    count = human.hand.size,
+                    key = { idx -> "${human.hand[idx].id}#$idx" },
+                ) { idx ->
+                    val tile = human.hand[idx]
+                    val isSelected = selected == tile
+                    val canAct = state.phase == Phase.AWAITING_DISCARD &&
+                        state.currentPlayer == humanIndex && !autoPlay
+                    MahjongTile(
+                        tile = tile,
+                        selected = isSelected,
+                        onClick = {
+                            if (!canAct) return@MahjongTile
+                            if (isSelected) onDiscard(tile) else onSelect(tile)
+                        },
                     )
                 }
             }
-            if (active) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .offset(x = 2.dp, y = 2.dp)
-                        .size(14.dp)
-                        .background(MahjongColors.gold, CircleShape)
-                        .border(1.dp, Color.Black, CircleShape),
-                )
-            }
         }
-        Spacer(modifier = Modifier.height(4.dp))
+    }
+}
+
+@Composable
+private fun CinematicHost(
+    modifier: Modifier,
+    player: PlayerState,
+    active: Boolean,
+    zh: Boolean,
+    alignment: Alignment,
+    showNameAbove: Boolean = true,
+) {
+    val avatar = ParlorCast.avatarRes(player.name) ?: return
+    Box(modifier = modifier, contentAlignment = alignment) {
+        Image(
+            painter = painterResource(avatar),
+            contentDescription = player.name,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(12.dp))
+                .border(
+                    width = if (active) 3.dp else 0.dp,
+                    color = if (active) MahjongColors.gold else Color.Transparent,
+                    shape = RoundedCornerShape(12.dp),
+                ),
+        )
         Text(
-            text = "${ParlorCast.displayName(p.name, zh)} · ${p.seat.label}",
+            text = "${ParlorCast.displayName(player.name, zh)} · ${player.seat.label}",
             color = if (active) MahjongColors.gold else Color.White,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
+                .align(if (showNameAbove) Alignment.TopCenter else Alignment.BottomCenter)
+                .padding(6.dp)
                 .background(Color.Black.copy(alpha = 0.55f), RoundedCornerShape(10.dp))
-                .padding(horizontal = 8.dp, vertical = 2.dp),
+                .padding(horizontal = 8.dp, vertical = 3.dp),
         )
     }
 }
 
 @Composable
-private fun HandBar(
+private fun ActionRow(
     state: GameState,
     human: PlayerState,
     humanIndex: Int,
@@ -363,68 +375,37 @@ private fun HandBar(
         state.currentPlayer == humanIndex && !autoPlay
     val myClaims = state.pendingClaims.filter { it.player == humanIndex }.map { it.kind }.distinct()
 
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Black.copy(alpha = 0.35f),
-                        Color.Black.copy(alpha = 0.82f),
-                    ),
-                ),
-            )
-            .padding(horizontal = 8.dp, vertical = 6.dp),
+            .padding(bottom = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (state.phase == Phase.AWAITING_CLAIMS && myClaims.isNotEmpty()) {
-                myClaims.forEach { kind ->
-                    ActionBtn(claimLabel(kind.name, strings)) { onClaim(kind) }
-                }
-                ActionBtn(strings.pass, muted = true, onClick = onPass)
+        if (state.phase == Phase.AWAITING_CLAIMS && myClaims.isNotEmpty()) {
+            myClaims.forEach { kind ->
+                ActionBtn(claimLabel(kind.name, strings)) { onClaim(kind) }
             }
-            if (canActDiscard) {
-                ActionBtn(strings.hu) { onHu() }
-                ActionBtn(strings.kong) { onKong() }
-                if (selected != null) {
-                    ActionBtn(strings.discard) { onDiscard(selected) }
-                }
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Text(text = human.seat.name, color = MahjongColors.mist, fontSize = 12.sp)
-            Text(
-                text = "  ${"%,d".format(human.chips)}",
-                color = MahjongColors.gold,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            ModeToggle(autoPlay, strings, onToggleAuto)
+            ActionBtn(strings.pass, muted = true, onClick = onPass)
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(3.dp),
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            items(
-                count = human.hand.size,
-                key = { idx -> "${human.hand[idx].id}#$idx" },
-            ) { idx ->
-                val tile = human.hand[idx]
-                val isSelected = selected == tile
-                MahjongTile(
-                    tile = tile,
-                    selected = isSelected,
-                    onClick = {
-                        if (!canActDiscard) return@MahjongTile
-                        if (isSelected) onDiscard(tile) else onSelect(tile)
-                    },
-                )
+        if (canActDiscard) {
+            ActionBtn(strings.hu) { onHu() }
+            ActionBtn(strings.kong) { onKong() }
+            if (selected != null) {
+                ActionBtn(strings.discard) { onDiscard(selected) }
             }
+        }
+        Spacer(Modifier.weight(1f))
+        Text(
+            text = "%,d".format(human.chips),
+            color = MahjongColors.gold,
+            fontWeight = FontWeight.Bold,
+        )
+        TextButton(onClick = { if (autoPlay) onToggleAuto() }) {
+            Text(strings.manual, color = if (!autoPlay) MahjongColors.gold else MahjongColors.mist)
+        }
+        TextButton(onClick = { if (!autoPlay) onToggleAuto() }) {
+            Text(strings.auto, color = if (autoPlay) MahjongColors.gold else MahjongColors.mist)
         }
     }
 }
@@ -432,45 +413,7 @@ private fun HandBar(
 @Composable
 private fun DiscardRow(tiles: List<Tile>, modifier: Modifier = Modifier) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(1.dp)) {
-        tiles.takeLast(12).forEach { tile ->
-            MahjongTile(tile, compact = true)
-        }
-    }
-}
-
-@Composable
-private fun WindCompass(state: GameState) {
-    Column(
-        modifier = Modifier
-            .background(Color.Black.copy(alpha = 0.55f), RoundedCornerShape(10.dp))
-            .border(1.dp, MahjongColors.gold.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text = "北", color = Color.White, fontSize = 10.sp)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "西", color = Color.White, fontSize = 10.sp)
-            Box(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(36.dp)
-                    .background(MahjongColors.rosewood, RoundedCornerShape(8.dp)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = "${state.wallRemaining}",
-                    color = MahjongColors.gold,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                )
-            }
-            Text(text = "東", color = Color.White, fontSize = 10.sp)
-        }
-        Text(
-            text = "南 · ${state.roundWind.label}",
-            color = MahjongColors.roseNeon,
-            fontSize = 10.sp,
-        )
+        tiles.takeLast(10).forEach { MahjongTile(it, compact = true) }
     }
 }
 
@@ -478,19 +421,19 @@ private fun WindCompass(state: GameState) {
 private fun TimerBadge(seconds: Int) {
     Box(
         modifier = Modifier
-            .size(56.dp)
+            .size(44.dp)
             .background(
                 Brush.radialGradient(colors = listOf(MahjongColors.gold, MahjongColors.roseNeon)),
                 CircleShape,
             )
-            .border(3.dp, Color.White.copy(alpha = 0.35f), CircleShape),
+            .border(2.dp, Color.White.copy(alpha = 0.3f), CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "$seconds",
             color = Color.Black,
             fontWeight = FontWeight.Black,
-            fontSize = 22.sp,
+            fontSize = 18.sp,
         )
     }
 }
@@ -503,26 +446,8 @@ private fun ActionBtn(label: String, muted: Boolean = false, onClick: () -> Unit
             containerColor = if (muted) Color(0xFF455A64) else MahjongColors.roseNeon,
         ),
         shape = RoundedCornerShape(18.dp),
-        modifier = Modifier.height(36.dp),
+        modifier = Modifier.height(34.dp),
     ) {
-        Text(text = label, fontSize = 13.sp)
-    }
-}
-
-@Composable
-private fun ModeToggle(auto: Boolean, strings: Strings, onToggle: () -> Unit) {
-    Row {
-        TextButton(onClick = { if (auto) onToggle() }) {
-            Text(
-                text = strings.manual,
-                color = if (!auto) MahjongColors.gold else MahjongColors.mist,
-            )
-        }
-        TextButton(onClick = { if (!auto) onToggle() }) {
-            Text(
-                text = strings.auto,
-                color = if (auto) MahjongColors.gold else MahjongColors.mist,
-            )
-        }
+        Text(text = label, fontSize = 12.sp)
     }
 }

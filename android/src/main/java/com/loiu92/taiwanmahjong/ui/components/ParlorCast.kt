@@ -6,11 +6,12 @@ import com.loiu92.taiwanmahjong.R
 /** Tea parlor / KTV cast seated around the table. */
 object ParlorCast {
     const val HUMAN = "You"
-    const val MEIMEI = "MeiMei"   // right — hostess
-    const val YAYA = "YaYa"       // top — hostess
-    const val HAO = "Hao"         // left — suited host
+    const val MEIMEI = "MeiMei"   // left hostess
+    const val HAO = "Hao"         // opposite suited host
+    const val YAYA = "YaYa"       // right hostess
 
-    val defaultNames = listOf(HUMAN, MEIMEI, YAYA, HAO)
+    /** Seat order: you, right, across, left — matches cinematic table. */
+    val defaultNames = listOf(HUMAN, YAYA, HAO, MEIMEI)
 
     fun displayName(name: String, zh: Boolean): String = when (name) {
         HUMAN, "你" -> if (zh) "你" else "You"

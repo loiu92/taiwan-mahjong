@@ -101,14 +101,14 @@ fun MahjongTile(
             .height(h)
             .clip(shape)
             .background(
-                if (faceUp) MahjongColors.tileFace else MahjongColors.tileBack,
+                if (faceUp) MahjongColors.tileFace else Color(0xFF1B5E20),
             )
             .border(
                 width = if (selected) 2.5.dp else 1.dp,
                 color = when {
-                    selected -> MahjongColors.acidYellow
+                    selected -> MahjongColors.gold
                     faceUp -> MahjongColors.tileFaceEdge
-                    else -> Color(0xFF7F0000)
+                    else -> Color(0xFF0D3B1E)
                 },
                 shape = shape,
             )
