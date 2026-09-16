@@ -6,9 +6,9 @@ Hand these prompts to an image-gen agent. Output **one tile per file**, PNG, tra
 
 Bitmap faces already in `android/src/main/res/drawable-nodpi/`:
 
-- `tile_c1`, `tile_c2`, `tile_c3`, `tile_c5`, `tile_c9`
-- `tile_b1`, `tile_b9`
-- `tile_d1`, `tile_d9`
+- `tile_c1` … `tile_c9` (full wan set)
+- `tile_b1`, `tile_b3`, `tile_b5`, `tile_b9`
+- `tile_d1`, `tile_d5`, `tile_d9`
 - `tile_we`, `tile_ws`, `tile_ww`, `tile_wn`
 - `tile_dr`, `tile_dg`, `tile_dw`
 - `tile_back`

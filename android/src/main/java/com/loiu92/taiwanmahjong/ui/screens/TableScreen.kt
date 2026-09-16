@@ -3,6 +3,7 @@ package com.loiu92.taiwanmahjong.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -396,8 +397,14 @@ private fun ActionRow(
             }
         }
         Spacer(Modifier.weight(1f))
+        Image(
+            painter = painterResource(R.drawable.ui_chip),
+            contentDescription = null,
+            modifier = Modifier.size(22.dp),
+            contentScale = ContentScale.Fit,
+        )
         Text(
-            text = "%,d".format(human.chips),
+            text = " %,d".format(human.chips),
             color = MahjongColors.gold,
             fontWeight = FontWeight.Bold,
         )
@@ -420,18 +427,18 @@ private fun DiscardRow(tiles: List<Tile>, modifier: Modifier = Modifier) {
 @Composable
 private fun TimerBadge(seconds: Int) {
     Box(
-        modifier = Modifier
-            .size(44.dp)
-            .background(
-                Brush.radialGradient(colors = listOf(MahjongColors.gold, MahjongColors.roseNeon)),
-                CircleShape,
-            )
-            .border(2.dp, Color.White.copy(alpha = 0.3f), CircleShape),
+        modifier = Modifier.size(52.dp),
         contentAlignment = Alignment.Center,
     ) {
+        Image(
+            painter = painterResource(R.drawable.ui_timer),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Fit,
+        )
         Text(
             text = "$seconds",
-            color = Color.Black,
+            color = Color.White,
             fontWeight = FontWeight.Black,
             fontSize = 18.sp,
         )
@@ -440,14 +447,34 @@ private fun TimerBadge(seconds: Int) {
 
 @Composable
 private fun ActionBtn(label: String, muted: Boolean = false, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (muted) Color(0xFF455A64) else MahjongColors.roseNeon,
-        ),
-        shape = RoundedCornerShape(18.dp),
-        modifier = Modifier.height(34.dp),
-    ) {
-        Text(text = label, fontSize = 12.sp)
+    val art = when (label) {
+        "胡", "Hu" -> R.drawable.ui_btn_hu
+        "碰", "Pong" -> R.drawable.ui_btn_pong
+        "槓", "Kong" -> R.drawable.ui_btn_kong
+        "吃", "Chi" -> R.drawable.ui_btn_chi
+        "過", "Pass" -> R.drawable.ui_btn_pass
+        else -> null
+    }
+    if (art != null) {
+        Image(
+            painter = painterResource(art),
+            contentDescription = label,
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .clickable(onClick = onClick),
+            contentScale = ContentScale.Crop,
+        )
+    } else {
+        Button(
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (muted) Color(0xFF455A64) else MahjongColors.roseNeon,
+            ),
+            shape = RoundedCornerShape(18.dp),
+            modifier = Modifier.height(34.dp),
+        ) {
+            Text(text = label, fontSize = 12.sp)
+        }
     }
 }

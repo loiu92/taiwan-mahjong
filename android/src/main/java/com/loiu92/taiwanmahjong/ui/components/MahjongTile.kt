@@ -47,17 +47,24 @@ private fun faceDrawable(tile: Tile): Int? = when (tile) {
             1 -> R.drawable.tile_c1
             2 -> R.drawable.tile_c2
             3 -> R.drawable.tile_c3
+            4 -> R.drawable.tile_c4
             5 -> R.drawable.tile_c5
+            6 -> R.drawable.tile_c6
+            7 -> R.drawable.tile_c7
+            8 -> R.drawable.tile_c8
             9 -> R.drawable.tile_c9
             else -> null
         }
         Suit.BAMBOOS -> when (tile.rank) {
             1 -> R.drawable.tile_b1
+            3 -> R.drawable.tile_b3
+            5 -> R.drawable.tile_b5
             9 -> R.drawable.tile_b9
             else -> null
         }
         Suit.DOTS -> when (tile.rank) {
             1 -> R.drawable.tile_d1
+            5 -> R.drawable.tile_d5
             9 -> R.drawable.tile_d9
             else -> null
         }
