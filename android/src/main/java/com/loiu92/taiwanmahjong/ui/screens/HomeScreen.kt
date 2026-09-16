@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -51,19 +50,19 @@ fun HomeScreen(
     onStart: () -> Unit,
 ) {
     val zh = lang == AppLang.ZH
-    Box(Modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.bg_home),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
         )
-        Box(
-            Modifier
+        Spacer(
+            modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        listOf(
+                        colors = listOf(
                             Color.Black.copy(alpha = 0.55f),
                             Color.Black.copy(alpha = 0.25f),
                             Color.Black.copy(alpha = 0.75f),
@@ -115,29 +114,9 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.Bottom,
             ) {
-                listOf(
-                    ParlorCast.MEIMEI to R.drawable.char_meimei,
-                    ParlorCast.YAYA to R.drawable.char_yaya,
-                    ParlorCast.HAO to R.drawable.char_hao,
-                ).forEach { (name, res) ->
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = painterResource(res),
-                            contentDescription = name,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(88.dp)
-                                .clip(CircleShape)
-                                .border(2.dp, MahjongColors.gold, CircleShape),
-                        )
-                        Spacer(Modifier.height(6.dp))
-                        Text(
-                            ParlorCast.displayName(name, zh),
-                            color = Color.White,
-                            fontSize = 12.sp,
-                        )
-                    }
-                }
+                HostAvatar(R.drawable.char_meimei, ParlorCast.displayName(ParlorCast.MEIMEI, zh))
+                HostAvatar(R.drawable.char_yaya, ParlorCast.displayName(ParlorCast.YAYA, zh))
+                HostAvatar(R.drawable.char_hao, ParlorCast.displayName(ParlorCast.HAO, zh))
             }
 
             Spacer(Modifier.height(20.dp))
@@ -150,7 +129,7 @@ fun HomeScreen(
                     .padding(18.dp),
             ) {
                 Text(
-                    "${strings.stake} $stake / ${stake * 2}",
+                    text = "${strings.stake} $stake / ${stake * 2}",
                     color = Color.White,
                     style = MaterialTheme.typography.titleLarge,
                 )
@@ -168,17 +147,36 @@ fun HomeScreen(
                 Spacer(Modifier.height(8.dp))
                 Button(
                     onClick = onStart,
-                    modifier = Modifier.fillMaxWidth().height(52.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MahjongColors.roseNeon),
                     shape = RoundedCornerShape(26.dp),
                 ) {
                     Text(
-                        if (zh) "進入包廂" else "Enter private room",
+                        text = strings.soloVsAi,
                         fontSize = 17.sp,
                         color = Color.White,
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun HostAvatar(resId: Int, label: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(
+            painter = painterResource(resId),
+            contentDescription = label,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(88.dp)
+                .clip(CircleShape)
+                .border(2.dp, MahjongColors.gold, CircleShape),
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(text = label, color = Color.White, fontSize = 12.sp)
     }
 }

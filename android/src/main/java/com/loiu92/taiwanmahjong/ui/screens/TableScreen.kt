@@ -81,19 +81,18 @@ fun TableScreen(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
         )
-        // Soft vignette so tiles stay readable
-        Box(
-            Modifier
+        Spacer(
+            modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.radialGradient(
-                        listOf(Color.Transparent, Color.Black.copy(alpha = 0.45f)),
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.45f)),
                     ),
                 ),
         )
 
-        Column(Modifier = Modifier.fillMaxSize()) {
-            TopBar(state, strings, onToggleLang, onQuit)
+        Column(modifier = Modifier.fillMaxSize()) {
+            TableTopBar(state, strings, onToggleLang, onQuit)
 
             Box(
                 modifier = Modifier
@@ -101,7 +100,6 @@ fun TableScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 6.dp),
             ) {
-                // Felt playfield over parlor
                 Box(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -111,7 +109,10 @@ fun TableScreen(
                         .clip(RoundedCornerShape(20.dp))
                         .background(
                             Brush.radialGradient(
-                                listOf(MahjongColors.feltEdge.copy(alpha = 0.92f), MahjongColors.felt.copy(alpha = 0.95f)),
+                                colors = listOf(
+                                    MahjongColors.feltEdge.copy(alpha = 0.92f),
+                                    MahjongColors.felt.copy(alpha = 0.95f),
+                                ),
                             ),
                         )
                         .border(2.dp, MahjongColors.gold.copy(alpha = 0.35f), RoundedCornerShape(20.dp)),
@@ -125,46 +126,64 @@ fun TableScreen(
                     )
 
                     SeatPortrait(
-                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 6.dp),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 6.dp),
                         playerIndex = top,
                         state = state,
                         zh = zh,
                         compact = false,
                     )
                     Row(
-                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 78.dp),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 78.dp),
                     ) {
                         repeat(minOf(8, state.player(top).hand.size)) { TileBack() }
                     }
                     DiscardRow(
                         tiles = state.player(top).discards,
-                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 118.dp),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 118.dp),
                     )
 
                     SeatPortrait(
-                        modifier = Modifier.align(Alignment.CenterStart).padding(start = 4.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 4.dp),
                         playerIndex = left,
                         state = state,
                         zh = zh,
                         compact = true,
                     )
                     Column(
-                        modifier = Modifier.align(Alignment.CenterStart).padding(start = 72.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 72.dp),
                     ) {
-                        repeat(minOf(6, state.player(left).hand.size / 2 + 1)) { TileBack(compact = true) }
+                        repeat(minOf(6, state.player(left).hand.size / 2 + 1)) {
+                            TileBack(compact = true)
+                        }
                     }
 
                     SeatPortrait(
-                        modifier = Modifier.align(Alignment.CenterEnd).padding(end = 4.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 4.dp),
                         playerIndex = right,
                         state = state,
                         zh = zh,
                         compact = true,
                     )
                     Column(
-                        modifier = Modifier.align(Alignment.CenterEnd).padding(end = 72.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 72.dp),
                     ) {
-                        repeat(minOf(6, state.player(right).hand.size / 2 + 1)) { TileBack(compact = true) }
+                        repeat(minOf(6, state.player(right).hand.size / 2 + 1)) {
+                            TileBack(compact = true)
+                        }
                     }
 
                     Row(
@@ -177,14 +196,20 @@ fun TableScreen(
                     }
 
                     Column(
-                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 6.dp),
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         DiscardRow(human.discards)
                         if (human.melds.isNotEmpty()) {
                             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                 human.melds.forEach { meld ->
-                                    Row { meld.tiles.forEach { MahjongTile(it, compact = true) } }
+                                    Row {
+                                        meld.tiles.forEach { tile ->
+                                            MahjongTile(tile, compact = true)
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -212,7 +237,7 @@ fun TableScreen(
 }
 
 @Composable
-private fun TopBar(
+private fun TableTopBar(
     state: GameState,
     strings: Strings,
     onToggleLang: () -> Unit,
@@ -227,23 +252,23 @@ private fun TopBar(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            "${state.stake * 2}/${state.stake}",
+            text = "${state.stake * 2}/${state.stake}",
             color = MahjongColors.gold,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
         )
         Text(
-            strings.brandZh,
+            text = strings.brandZh,
             color = MahjongColors.roseNeon,
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
         )
         Row {
             TextButton(onClick = onToggleLang) {
-                Text(strings.langToggle, color = MahjongColors.roseNeon)
+                Text(text = strings.langToggle, color = MahjongColors.roseNeon)
             }
             TextButton(onClick = onQuit) {
-                Text(strings.exit, color = MahjongColors.mist)
+                Text(text = strings.exit, color = MahjongColors.mist)
             }
         }
     }
@@ -260,7 +285,7 @@ private fun SeatPortrait(
     val p = state.player(playerIndex)
     val active = state.currentPlayer == playerIndex
     val avatar = ParlorCast.avatarRes(p.name)
-    val size = if (compact) 64.dp else 72.dp
+    val avatarSize = if (compact) 64.dp else 72.dp
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Box {
@@ -270,7 +295,7 @@ private fun SeatPortrait(
                     contentDescription = p.name,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(size)
+                        .size(avatarSize)
                         .shadow(8.dp, CircleShape)
                         .clip(CircleShape)
                         .border(
@@ -282,12 +307,16 @@ private fun SeatPortrait(
             } else {
                 Box(
                     modifier = Modifier
-                        .size(size)
+                        .size(avatarSize)
                         .clip(CircleShape)
                         .background(MahjongColors.rosewood),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(p.name.take(1), color = Color.White, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = p.name.take(1),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             }
             if (active) {
@@ -301,7 +330,7 @@ private fun SeatPortrait(
                 )
             }
         }
-        Spacer(Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "${ParlorCast.displayName(p.name, zh)} · ${p.seat.label}",
             color = if (active) MahjongColors.gold else Color.White,
@@ -339,7 +368,10 @@ private fun HandBar(
             .fillMaxWidth()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color.Black.copy(alpha = 0.35f), Color.Black.copy(alpha = 0.82f)),
+                    colors = listOf(
+                        Color.Black.copy(alpha = 0.35f),
+                        Color.Black.copy(alpha = 0.82f),
+                    ),
                 ),
             )
             .padding(horizontal = 8.dp, vertical = 6.dp),
@@ -362,13 +394,17 @@ private fun HandBar(
                     ActionBtn(strings.discard) { onDiscard(selected) }
                 }
             }
-            Spacer(Modifier.weight(1f))
-            Text(human.seat.name, color = MahjongColors.mist, fontSize = 12.sp)
-            Text("  ${"%,d".format(human.chips)}", color = MahjongColors.gold, fontWeight = FontWeight.Bold)
-            Spacer(Modifier.width(8.dp))
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = human.seat.name, color = MahjongColors.mist, fontSize = 12.sp)
+            Text(
+                text = "  ${"%,d".format(human.chips)}",
+                color = MahjongColors.gold,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             ModeToggle(autoPlay, strings, onToggleAuto)
         }
-        Spacer(Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(3.dp),
             verticalAlignment = Alignment.Bottom,
@@ -396,7 +432,9 @@ private fun HandBar(
 @Composable
 private fun DiscardRow(tiles: List<Tile>, modifier: Modifier = Modifier) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(1.dp)) {
-        tiles.takeLast(12).forEach { MahjongTile(it, compact = true) }
+        tiles.takeLast(12).forEach { tile ->
+            MahjongTile(tile, compact = true)
+        }
     }
 }
 
@@ -409,9 +447,9 @@ private fun WindCompass(state: GameState) {
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("北", color = Color.White, fontSize = 10.sp)
+        Text(text = "北", color = Color.White, fontSize = 10.sp)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("西", color = Color.White, fontSize = 10.sp)
+            Text(text = "西", color = Color.White, fontSize = 10.sp)
             Box(
                 modifier = Modifier
                     .padding(4.dp)
@@ -419,11 +457,20 @@ private fun WindCompass(state: GameState) {
                     .background(MahjongColors.rosewood, RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("${state.wallRemaining}", color = MahjongColors.gold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text(
+                    text = "${state.wallRemaining}",
+                    color = MahjongColors.gold,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                )
             }
-            Text("東", color = Color.White, fontSize = 10.sp)
+            Text(text = "東", color = Color.White, fontSize = 10.sp)
         }
-        Text("南 · ${state.roundWind.label}", color = MahjongColors.roseNeon, fontSize = 10.sp)
+        Text(
+            text = "南 · ${state.roundWind.label}",
+            color = MahjongColors.roseNeon,
+            fontSize = 10.sp,
+        )
     }
 }
 
@@ -433,13 +480,18 @@ private fun TimerBadge(seconds: Int) {
         modifier = Modifier
             .size(56.dp)
             .background(
-                Brush.radialGradient(listOf(MahjongColors.gold, MahjongColors.roseNeon)),
+                Brush.radialGradient(colors = listOf(MahjongColors.gold, MahjongColors.roseNeon)),
                 CircleShape,
             )
             .border(3.dp, Color.White.copy(alpha = 0.35f), CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        Text("$seconds", color = Color.Black, fontWeight = FontWeight.Black, fontSize = 22.sp)
+        Text(
+            text = "$seconds",
+            color = Color.Black,
+            fontWeight = FontWeight.Black,
+            fontSize = 22.sp,
+        )
     }
 }
 
@@ -453,7 +505,7 @@ private fun ActionBtn(label: String, muted: Boolean = false, onClick: () -> Unit
         shape = RoundedCornerShape(18.dp),
         modifier = Modifier.height(36.dp),
     ) {
-        Text(label, fontSize = 13.sp)
+        Text(text = label, fontSize = 13.sp)
     }
 }
 
@@ -461,10 +513,16 @@ private fun ActionBtn(label: String, muted: Boolean = false, onClick: () -> Unit
 private fun ModeToggle(auto: Boolean, strings: Strings, onToggle: () -> Unit) {
     Row {
         TextButton(onClick = { if (auto) onToggle() }) {
-            Text(strings.manual, color = if (!auto) MahjongColors.gold else MahjongColors.mist)
+            Text(
+                text = strings.manual,
+                color = if (!auto) MahjongColors.gold else MahjongColors.mist,
+            )
         }
         TextButton(onClick = { if (!auto) onToggle() }) {
-            Text(strings.auto, color = if (auto) MahjongColors.gold else MahjongColors.mist)
+            Text(
+                text = strings.auto,
+                color = if (auto) MahjongColors.gold else MahjongColors.mist,
+            )
         }
     }
 }
