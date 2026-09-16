@@ -1,0 +1,12 @@
+# Built by Gradle / Android Studio
+.gradle/
+**/build/
+local.properties
+*.iml
+.idea/
+.DS_Store
+captures/
+*.apk
+*.ap_
+*.dex
+.cxx/
