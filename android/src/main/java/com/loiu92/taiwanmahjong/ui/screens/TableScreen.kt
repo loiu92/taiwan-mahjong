@@ -255,20 +255,41 @@ private fun PlayerChip(name: String, wind: String, active: Boolean) {
                 if (active) MahjongColors.vermillion else MahjongColors.cobalt,
                 RoundedCornerShape(2.dp),
             )
-            .padding(horizontal = 10.dp, vertical = 4.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
-                .size(18.dp)
-                .background(Color.Black.copy(alpha = 0.25f), CircleShape),
+                .size(28.dp)
+                .background(
+                    Brush.radialGradient(
+                        listOf(Color.White.copy(alpha = 0.25f), avatarColor(name)),
+                    ),
+                    CircleShape,
+                )
+                .border(1.dp, Color.White.copy(alpha = 0.35f), CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text(wind, fontSize = 10.sp, color = if (active) Color.Black else Color.White, fontWeight = FontWeight.Bold)
+            Text(
+                name.take(1),
+                fontSize = 12.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+            )
         }
         Spacer(Modifier.width(6.dp))
-        Text(name, color = if (active) Color.Black else Color.White, fontSize = 13.sp)
+        Column {
+            Text(name, color = if (active) Color.Black else Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+            Text(wind, color = if (active) Color.Black.copy(alpha = 0.7f) else MahjongColors.mist, fontSize = 10.sp)
+        }
     }
+}
+
+private fun avatarColor(name: String): Color = when (name) {
+    "Anada" -> Color(0xFFE91E63)
+    "Lori" -> Color(0xFF26A69A)
+    "Panda" -> Color(0xFF546E7A)
+    else -> MahjongColors.cobalt
 }
 
 @Composable
