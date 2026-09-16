@@ -39,7 +39,7 @@ See [TILE_PROMPTS.md](TILE_PROMPTS.md). Pattern: `tile_c1`…`tile_c9`, `tile_b1
 ## Shipped now (`drawable-nodpi/`)
 
 **Scene:** `bg_home`, `bg_table` (empty room — no people baked in), `bg_parlor`, `emblem_fa`  
-**Cast:** `char_hao`, `char_meimei`, `char_yaya` (separate portraits)  
+**Cast:** `char_hao.png`, `char_meimei.png`, `char_yaya.png` — **transparent cutouts** (no photo background) so they fuse with `bg_table`  
 **UI:** `ui_chip`, `ui_timer`, `ui_btn_hu`, `ui_btn_pong`, `ui_btn_kong`, `ui_btn_chi`, `ui_btn_pass`, `ui_nameplate`  
 **Tiles:** full 萬 `c1–c9`; 索 `b1,b3,b5,b9`; 筒 `d1,d5,d9`; all winds; 中發白; `tile_back`
 

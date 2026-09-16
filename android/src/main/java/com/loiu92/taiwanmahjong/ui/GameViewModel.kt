@@ -155,7 +155,8 @@ class GameViewModel : ViewModel() {
                     Phase.AWAITING_DISCARD -> {
                         val p = state.currentPlayer
                         if (p == human && !auto) return@launch
-                        delay(if (p == human) 400 else 700)
+                        // Human-readable parlor pacing (was 400/700 — too snappy)
+                        delay(if (p == human) 1_400L else 2_200L)
                         s.botMove(p)
                         publish(s)
                         restartTimer()
@@ -173,7 +174,7 @@ class GameViewModel : ViewModel() {
                             (pid != human || auto) && best >= humanBest
                         }?.key
                         if (next == null) return@launch
-                        delay(500)
+                        delay(1_600L)
                         s.botMove(next)
                         publish(s)
                         restartTimer()

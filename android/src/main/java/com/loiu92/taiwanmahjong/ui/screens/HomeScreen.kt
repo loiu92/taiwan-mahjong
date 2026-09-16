@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -25,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -167,15 +167,29 @@ fun HomeScreen(
 @Composable
 private fun HostAvatar(resId: Int, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(
-            painter = painterResource(resId),
-            contentDescription = label,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(88.dp)
-                .clip(CircleShape)
-                .border(2.dp, MahjongColors.gold, CircleShape),
-        )
+        Box(
+            modifier = Modifier.size(100.dp),
+            contentAlignment = Alignment.BottomCenter,
+        ) {
+            Box(
+                modifier = Modifier
+                    .offset(y = (-4).dp)
+                    .fillMaxWidth(0.65f)
+                    .height(14.dp)
+                    .background(
+                        Brush.radialGradient(
+                            listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent),
+                        ),
+                        CircleShape,
+                    ),
+            )
+            Image(
+                painter = painterResource(resId),
+                contentDescription = label,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
         Spacer(Modifier.height(6.dp))
         Text(text = label, color = Color.White, fontSize = 12.sp)
     }

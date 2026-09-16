@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -181,15 +182,20 @@ fun TableScreen(
             showNameAbove = false,
         )
 
-        // Felt table plane
+        // Felt table — trapezoid-ish depth via wider bottom (2.5D sit-in feel)
         Box(
             modifier = Modifier
                 .align(Alignment.Center)
-                .offset(y = 28.dp)
-                .fillMaxWidth(0.58f)
-                .fillMaxHeight(0.42f)
-                .shadow(20.dp, RoundedCornerShape(14.dp))
-                .clip(RoundedCornerShape(14.dp))
+                .offset(y = 36.dp)
+                .fillMaxWidth(0.62f)
+                .fillMaxHeight(0.40f)
+                .graphicsLayer {
+                    rotationX = 8f
+                    cameraDistance = 12f * density
+                    shadowElevation = 24f
+                    shape = RoundedCornerShape(14.dp)
+                    clip = true
+                }
                 .background(
                     Brush.radialGradient(
                         colors = listOf(Color(0xFF1B5E3A), Color(0xFF0A2E1C)),
@@ -329,18 +335,36 @@ private fun CinematicHost(
 ) {
     val avatar = ParlorCast.avatarRes(player.name) ?: return
     Box(modifier = modifier, contentAlignment = alignment) {
+        // Soft contact shadow so cutout sits in the room (2.5D, not a photo plate)
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .offset(y = (-6).dp)
+                .fillMaxWidth(0.7f)
+                .height(18.dp)
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.45f),
+                            Color.Transparent,
+                        ),
+                    ),
+                    CircleShape,
+                ),
+        )
         Image(
             painter = painterResource(avatar),
             contentDescription = player.name,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(12.dp))
-                .border(
-                    width = if (active) 3.dp else 0.dp,
-                    color = if (active) MahjongColors.gold else Color.Transparent,
-                    shape = RoundedCornerShape(12.dp),
-                ),
+                .graphicsLayer {
+                    // Subtle “in room” depth: slightly larger when active
+                    val s = if (active) 1.04f else 1f
+                    scaleX = s
+                    scaleY = s
+                    shadowElevation = if (active) 12f else 6f
+                },
         )
         Text(
             text = "${ParlorCast.displayName(player.name, zh)} · ${player.seat.label}",
@@ -351,6 +375,11 @@ private fun CinematicHost(
                 .align(if (showNameAbove) Alignment.TopCenter else Alignment.BottomCenter)
                 .padding(6.dp)
                 .background(Color.Black.copy(alpha = 0.55f), RoundedCornerShape(10.dp))
+                .border(
+                    width = if (active) 1.dp else 0.dp,
+                    color = if (active) MahjongColors.gold else Color.Transparent,
+                    shape = RoundedCornerShape(10.dp),
+                )
                 .padding(horizontal = 8.dp, vertical = 3.dp),
         )
     }
