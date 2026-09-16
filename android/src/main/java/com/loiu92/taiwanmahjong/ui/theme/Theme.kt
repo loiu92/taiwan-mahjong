@@ -10,20 +10,21 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-/**
- * Taiwan 2026 — Raohe / Ximending night-market neon on wet asphalt,
- * paired with deep table felt (not generic casino green).
- */
+/** Taiwanese luxury tea parlor / KTV — rosewood, amber lantern, rose neon. */
 object MahjongColors {
-    val asphalt = Color(0xFF0A0C10)
-    val asphaltLift = Color(0xFF141820)
-    val vermillion = Color(0xFFE73121)
-    val cobalt = Color(0xFF0047AB)
-    val cobaltDeep = Color(0xFF003080)
-    val acidYellow = Color(0xFFFFE600)
-    val neonCyan = Color(0xFF00E5FF)
-    val felt = Color(0xFF0F3D2E)
-    val feltEdge = Color(0xFF1A5C45)
+    val asphalt = Color(0xFF120A0C)
+    val asphaltLift = Color(0xFF1C1014)
+    val rosewood = Color(0xFF4A1C1C)
+    val vermillion = Color(0xFFE23B3B)
+    val roseNeon = Color(0xFFFF4D8D)
+    val amber = Color(0xFFFFB347)
+    val gold = Color(0xFFE8C547)
+    val cobalt = Color(0xFF3D5A80)
+    val cobaltDeep = Color(0xFF1B2838)
+    val acidYellow = Color(0xFFFFD166)
+    val neonCyan = Color(0xFFFF8FAB)
+    val felt = Color(0xFF0E3A2C)
+    val feltEdge = Color(0xFF1F5C45)
     val tileFace = Color(0xFFF7F1E3)
     val tileFaceEdge = Color(0xFFD4CBB8)
     val tileBack = Color(0xFFB71C1C)
@@ -33,13 +34,13 @@ object MahjongColors {
     val tileDotRed = Color(0xFFC62828)
     val tileDotGreen = Color(0xFF2E7D32)
     val ink = Color(0xFF1A1A1A)
-    val mist = Color(0xFFB0BEC5)
+    val mist = Color(0xFFE0C8C8)
 }
 
 private val colors = darkColorScheme(
-    primary = MahjongColors.vermillion,
-    secondary = MahjongColors.acidYellow,
-    tertiary = MahjongColors.cobalt,
+    primary = MahjongColors.roseNeon,
+    secondary = MahjongColors.amber,
+    tertiary = MahjongColors.gold,
     background = MahjongColors.asphalt,
     surface = MahjongColors.asphaltLift,
     onPrimary = Color.White,

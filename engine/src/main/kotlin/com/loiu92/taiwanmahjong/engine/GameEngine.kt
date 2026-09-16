@@ -13,7 +13,7 @@ sealed class PlayerIntent {
 class GameEngine(private var random: Random = Random.Default) {
 
     fun newHand(
-        names: List<String> = listOf("You", "Anada", "Lori", "Panda"),
+        names: List<String> = listOf("You", "MeiMei", "YaYa", "Hao"),
         humanIndex: Int = 0,
         chips: List<Int> = List(4) { 72_400 },
         stake: Int = 50,

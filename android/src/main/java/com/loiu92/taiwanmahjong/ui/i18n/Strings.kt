@@ -29,9 +29,9 @@ data class Strings(
 
 fun strings(lang: AppLang): Strings = when (lang) {
     AppLang.ZH -> Strings(
-        tagline = "十六張 · 台數完整 · 單機 AI",
+        tagline = "茶館包廂 · 招待陪打 · 單機 AI",
         stake = "底",
-        soloVsAi = "單機對戰 AI",
+        soloVsAi = "進入包廂",
         exit = "離開",
         discard = "打牌",
         pass = "過",
@@ -51,9 +51,9 @@ fun strings(lang: AppLang): Strings = when (lang) {
         langToggle = "EN",
     )
     AppLang.EN -> Strings(
-        tagline = "16-tile · Full tai · Local AI",
+        tagline = "Private room · Hosts at your table · Local AI",
         stake = "Stake",
-        soloVsAi = "Solo vs AI",
+        soloVsAi = "Enter private room",
         exit = "Exit",
         discard = "Discard",
         pass = "Pass",

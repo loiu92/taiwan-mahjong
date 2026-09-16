@@ -10,7 +10,7 @@ interface GameSession {
 }
 
 class LocalSession(
-    names: List<String> = listOf("You", "Anada", "Lori", "Panda"),
+    names: List<String> = listOf("You", "MeiMei", "YaYa", "Hao"),
     stake: Int = 50,
     seed: Long = System.currentTimeMillis(),
     private val engine: GameEngine = GameEngine(),

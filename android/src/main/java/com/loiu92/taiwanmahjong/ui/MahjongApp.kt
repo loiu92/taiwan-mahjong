@@ -33,6 +33,7 @@ fun MahjongApp(vm: GameViewModel = viewModel()) {
                     autoPlay = state.autoPlay,
                     timer = state.timerSeconds,
                     humanIndex = state.humanIndex,
+                    lang = state.lang,
                     strings = s,
                     onSelect = vm::selectTile,
                     onDiscard = vm::discard,
@@ -53,6 +54,7 @@ fun MahjongApp(vm: GameViewModel = viewModel()) {
             } else {
                 ResultScreen(
                     state = game,
+                    lang = state.lang,
                     strings = s,
                     onNext = vm::nextHand,
                     onHome = vm::backHome,

@@ -1,5 +1,6 @@
 package com.loiu92.taiwanmahjong.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -22,11 +26,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.loiu92.taiwanmahjong.R
+import com.loiu92.taiwanmahjong.ui.components.ParlorCast
 import com.loiu92.taiwanmahjong.ui.i18n.AppLang
 import com.loiu92.taiwanmahjong.ui.i18n.Strings
 import com.loiu92.taiwanmahjong.ui.theme.MahjongColors
@@ -41,83 +50,104 @@ fun HomeScreen(
     onToggleLang: () -> Unit,
     onStart: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        MahjongColors.asphalt,
-                        Color(0xFF0C1A2E),
-                        Color(0xFF1A0A12),
-                        MahjongColors.asphalt,
-                    ),
-                ),
-            ),
-    ) {
-        // Neon accent bars (night-market signage vibe)
-        Box(
-            Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-                .height(4.dp)
-                .fillMaxWidth(0.35f)
-                .background(MahjongColors.vermillion),
+    val zh = lang == AppLang.ZH
+    Box(Modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.bg_home),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize(),
         )
         Box(
             Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .height(4.dp)
-                .fillMaxWidth(0.2f)
-                .background(MahjongColors.acidYellow),
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            Color.Black.copy(alpha = 0.55f),
+                            Color.Black.copy(alpha = 0.25f),
+                            Color.Black.copy(alpha = 0.75f),
+                        ),
+                    ),
+                ),
         )
 
         Text(
             text = strings.langToggle,
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 28.dp, end = 16.dp)
+                .padding(16.dp)
                 .clickable(onClick = onToggleLang)
-                .border(1.dp, MahjongColors.neonCyan, RoundedCornerShape(6.dp))
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-            color = MahjongColors.neonCyan,
+                .border(1.dp, MahjongColors.roseNeon, RoundedCornerShape(20.dp))
+                .background(Color.Black.copy(alpha = 0.45f), RoundedCornerShape(20.dp))
+                .padding(horizontal = 14.dp, vertical = 7.dp),
+            color = MahjongColors.roseNeon,
             style = MaterialTheme.typography.labelLarge,
         )
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(24.dp)
-                .fillMaxWidth(0.72f),
+                .fillMaxWidth(0.78f)
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = strings.brandZh,
                 style = MaterialTheme.typography.displayLarge,
-                color = MahjongColors.vermillion,
+                color = MahjongColors.gold,
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = strings.brandEn,
-                style = MaterialTheme.typography.titleLarge,
-                color = MahjongColors.acidYellow,
-                textAlign = TextAlign.Center,
+                text = if (zh) "茶館 · KTV 麻將廳" else "Tea Parlor · KTV Mahjong",
+                color = MahjongColors.roseNeon,
+                fontSize = 15.sp,
             )
-            Spacer(Modifier.height(6.dp))
             Text(
                 text = strings.tagline,
                 color = MahjongColors.mist,
                 fontSize = 13.sp,
             )
-            Spacer(Modifier.height(28.dp))
+
+            Spacer(Modifier.height(18.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                listOf(
+                    ParlorCast.MEIMEI to R.drawable.char_meimei,
+                    ParlorCast.YAYA to R.drawable.char_yaya,
+                    ParlorCast.HAO to R.drawable.char_hao,
+                ).forEach { (name, res) ->
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Image(
+                            painter = painterResource(res),
+                            contentDescription = name,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(88.dp)
+                                .clip(CircleShape)
+                                .border(2.dp, MahjongColors.gold, CircleShape),
+                        )
+                        Spacer(Modifier.height(6.dp))
+                        Text(
+                            ParlorCast.displayName(name, zh),
+                            color = Color.White,
+                            fontSize = 12.sp,
+                        )
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(20.dp))
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MahjongColors.asphaltLift.copy(alpha = 0.92f), RoundedCornerShape(4.dp))
-                    .border(1.dp, MahjongColors.cobalt, RoundedCornerShape(4.dp))
-                    .padding(20.dp),
+                    .background(Color.Black.copy(alpha = 0.55f), RoundedCornerShape(16.dp))
+                    .border(1.dp, MahjongColors.gold.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                    .padding(18.dp),
             ) {
                 Text(
                     "${strings.stake} $stake / ${stake * 2}",
@@ -130,38 +160,22 @@ fun HomeScreen(
                     valueRange = 10f..200f,
                     steps = 18,
                     colors = SliderDefaults.colors(
-                        thumbColor = MahjongColors.acidYellow,
-                        activeTrackColor = MahjongColors.vermillion,
-                        inactiveTrackColor = MahjongColors.cobaltDeep,
+                        thumbColor = MahjongColors.gold,
+                        activeTrackColor = MahjongColors.roseNeon,
+                        inactiveTrackColor = Color.White.copy(alpha = 0.2f),
                     ),
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(8.dp))
                 Button(
                     onClick = onStart,
                     modifier = Modifier.fillMaxWidth().height(52.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MahjongColors.vermillion),
-                    shape = RoundedCornerShape(4.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MahjongColors.roseNeon),
+                    shape = RoundedCornerShape(26.dp),
                 ) {
-                    Text(strings.soloVsAi, fontSize = 18.sp, color = Color.White)
-                }
-            }
-
-            Spacer(Modifier.height(18.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                val names = if (lang == AppLang.ZH) {
-                    listOf("你", "Anada", "Lori", "Panda")
-                } else {
-                    listOf("You", "Anada", "Lori", "Panda")
-                }
-                names.forEach { name ->
                     Text(
-                        text = name,
-                        modifier = Modifier
-                            .background(MahjongColors.cobaltDeep, RoundedCornerShape(2.dp))
-                            .border(1.dp, MahjongColors.cobalt, RoundedCornerShape(2.dp))
-                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                        if (zh) "進入包廂" else "Enter private room",
+                        fontSize = 17.sp,
                         color = Color.White,
-                        fontSize = 12.sp,
                     )
                 }
             }
