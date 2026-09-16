@@ -8,6 +8,7 @@ import com.loiu92.taiwanmahjong.engine.LocalSession
 import com.loiu92.taiwanmahjong.engine.Phase
 import com.loiu92.taiwanmahjong.engine.PlayerIntent
 import com.loiu92.taiwanmahjong.engine.Tile
+import com.loiu92.taiwanmahjong.ui.i18n.AppLang
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +26,7 @@ data class UiState(
     val stake: Int = 50,
     val timerSeconds: Int = 30,
     val humanIndex: Int = 0,
+    val lang: AppLang = AppLang.ZH,
 )
 
 enum class Screen { Home, Table, Result }
@@ -39,6 +41,12 @@ class GameViewModel : ViewModel() {
 
     fun setStake(stake: Int) {
         _ui.update { it.copy(stake = stake) }
+    }
+
+    fun toggleLang() {
+        _ui.update {
+            it.copy(lang = if (it.lang == AppLang.ZH) AppLang.EN else AppLang.ZH)
+        }
     }
 
     fun startSolo() {
@@ -107,7 +115,7 @@ class GameViewModel : ViewModel() {
         loopJob?.cancel()
         timerJob?.cancel()
         session = null
-        _ui.update { UiState(stake = it.stake) }
+        _ui.update { UiState(stake = it.stake, lang = it.lang) }
     }
 
     private fun humanIntent(intent: PlayerIntent) {
