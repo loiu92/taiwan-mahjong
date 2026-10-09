@@ -1,5 +1,6 @@
 package com.loiu92.taiwanmahjong.ui
 
+import com.loiu92.taiwanmahjong.engine.viewFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,7 +24,7 @@ fun MahjongApp(vm: GameViewModel = viewModel()) {
             onStart = vm::startSolo,
         )
         Screen.Table -> {
-            val game = state.game
+            val game = state.game?.viewFor(state.humanIndex)
             if (game == null) {
                 HomeScreen(state.stake, state.lang, s, vm::setStake, vm::toggleLang, vm::startSolo)
             } else {
