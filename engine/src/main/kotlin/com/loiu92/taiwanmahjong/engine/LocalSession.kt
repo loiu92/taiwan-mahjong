@@ -1,7 +1,8 @@
 package com.loiu92.taiwanmahjong.engine
 
 /**
- * Abstraction for local vs future remote (Cloudflare DO) sessions.
+ * Trusted local controller interface. Remote delivery must expose PlayerView,
+ * never this full-state interface or a replay journal.
  */
 interface GameSession {
     val state: GameState
@@ -15,25 +16,28 @@ class LocalSession(
     seed: Long = System.currentTimeMillis(),
     private val engine: GameEngine = GameEngine(),
 ) : GameSession {
-    override var state: GameState = engine.newHand(names = names, stake = stake, seed = seed)
-        private set
+    private var replay = ReplaySession(HandSetup(seed = seed, names = names, stake = stake), engine)
+    override val state: GameState get() = replay.state
 
     override fun intent(player: Int, intent: PlayerIntent): GameState {
-        state = engine.apply(state, player, intent)
+        replay.dispatch(ReplayCommand.Player(player, intent))
         return state
     }
 
-    override fun legal(player: Int): List<PlayerIntent> = engine.legalIntents(state, player)
+    override fun legal(player: Int): List<PlayerIntent> = replay.legal(player)
+    fun viewFor(player: Int): PlayerView = replay.viewFor(player)
+    fun journal(): ReplayLog = replay.journal()
 
     fun botMove(player: Int): GameState {
-        val choice = BotPolicy.choose(state, player, engine)
-        return intent(player, choice)
+        replay.dispatch(ReplayCommand.BotStep(player))
+        return state
     }
 
     fun startNextHand(): GameState {
         val (dealer, round) = engine.nextHandDealerAndRound(state)
         val chips = state.players.map { it.chips }
-        state = engine.newHand(
+        replay = ReplaySession(HandSetup(
+            seed = System.currentTimeMillis(),
             names = state.players.map { it.name },
             humanIndex = state.players.indexOfFirst { it.isHuman }.coerceAtLeast(0),
             chips = chips,
@@ -41,7 +45,7 @@ class LocalSession(
             roundWind = round,
             dealer = dealer,
             handNumber = state.handNumber + 1,
-        )
+        ), engine)
         return state
     }
 }

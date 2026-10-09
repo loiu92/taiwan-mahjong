@@ -39,9 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.loiu92.taiwanmahjong.R
 import com.loiu92.taiwanmahjong.engine.ClaimKind
-import com.loiu92.taiwanmahjong.engine.GameState
+import com.loiu92.taiwanmahjong.engine.PlayerView
 import com.loiu92.taiwanmahjong.engine.Phase
-import com.loiu92.taiwanmahjong.engine.PlayerState
+import com.loiu92.taiwanmahjong.engine.VisiblePlayer
 import com.loiu92.taiwanmahjong.engine.Tile
 import com.loiu92.taiwanmahjong.ui.components.MahjongTile
 import com.loiu92.taiwanmahjong.ui.components.ParlorCast
@@ -57,7 +57,7 @@ import com.loiu92.taiwanmahjong.ui.theme.MahjongColors
  */
 @Composable
 fun TableScreen(
-    state: GameState,
+    state: PlayerView,
     selected: Tile?,
     autoPlay: Boolean,
     timer: Int,
@@ -218,7 +218,7 @@ fun TableScreen(
                     .align(Alignment.TopCenter)
                     .padding(top = 8.dp),
             ) {
-                repeat(minOf(12, state.player(top).hand.size)) { TileBack(compact = true) }
+                repeat(minOf(12, state.player(top).concealedCount)) { TileBack(compact = true) }
             }
             DiscardRow(
                 tiles = state.player(top).discards,
@@ -327,7 +327,7 @@ fun TableScreen(
 @Composable
 private fun CinematicHost(
     modifier: Modifier,
-    player: PlayerState,
+    player: VisiblePlayer,
     active: Boolean,
     zh: Boolean,
     alignment: Alignment,
@@ -387,8 +387,8 @@ private fun CinematicHost(
 
 @Composable
 private fun ActionRow(
-    state: GameState,
-    human: PlayerState,
+    state: PlayerView,
+    human: VisiblePlayer,
     humanIndex: Int,
     selected: Tile?,
     autoPlay: Boolean,
